@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      MONGODB_DATABASE: test
+      MONGODB_HOSTNAME: mongodb
+      MONGODB_PORT: 27017
+    volumes:
+      - .:/code
+    depends_on:
+      - mongodb
+    ports:
+      - "8000:8000"
+  
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod
+    environment:
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - ./var/mongodbdata:/data/db
+    ports:
+      - "27017:27017"
+
+
